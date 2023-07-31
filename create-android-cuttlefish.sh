@@ -1,14 +1,16 @@
 #!/bin/bash
 
-REPO_DIR=android-cuttlefish-automation
-FLAG_DIR=${REPO_DIR}/flag_files
-IMG_DIR=${REPO_DIR}/cuttlefish-images
+BASE_DIR=~/android-cuttlefish-auto
+FLAG_DIR=${BASE_DIR}/flag_files
+
+mkdir -p ${BASE_DIR}
 mkdir -p ${FLAG_DIR}
 
+cd ${BASE_DIR}
 
+# Step 1: Check KVM availability
 if [ ! -f "${FLAG_DIR}/step1_complete" ]; then
-    # Step 1: Check KVM availability
-    echo "Step 2: Checking KVM availability..."
+    echo "Step 1: Checking KVM availability..."
     if grep -q -w "vmx\|svm" /proc/cpuinfo; then
         echo "KVM is available."
     else
@@ -18,9 +20,9 @@ if [ ! -f "${FLAG_DIR}/step1_complete" ]; then
     touch ${FLAG_DIR}/step1_complete
 fi
 
+# Step 2: Download, build, and install cuttlefish host debian packages
 if [ ! -f "${FLAG_DIR}/step2_complete" ]; then
-    # Step 2: Download, build, and install cuttlefish host debian packages
-    echo "Installing dependencies and building cuttlefish..."
+    echo "Step 2: Installing dependencies and building cuttlefish..."
     sudo apt update
     sudo apt install -y git devscripts config-package-dev debhelper-compat golang curl
     git clone https://github.com/google/android-cuttlefish
@@ -33,20 +35,25 @@ if [ ! -f "${FLAG_DIR}/step2_complete" ]; then
     sudo dpkg -i ./cuttlefish-base_*_*64.deb || sudo apt-get install -f
     sudo dpkg -i ./cuttlefish-user_*_*64.deb || sudo apt-get install -f
     sudo usermod -aG kvm,cvdnetwork,render $USER
-    echo "Rebooting in 5 seconds. Run this script again after reboot."
+    echo "Rebooting in 5 seconds. Run this bash script again after reboot!"
     touch ${FLAG_DIR}/step2_complete
     sleep 5
     sudo reboot
 fi
 
+# Step 3: Download OTA image of Cuttlefish Virtual Device (CVD) and host package of Android Cuttleish
 if [ ! -f "${FLAG_DIR}/step3_complete" ]; then
-    # Step 3: Download OTA image of Cuttlefish Virtual Device (CVD) and host package of Android Cuttleish
-    echo "Step 3: Preparing OTA image of Cuttlefish virtual device (CVD) and host package of Android Cuttleish"
+    echo "Step 3: Downloading OTA image of Cuttlefish virtual device (CVD) and host package of Android Cuttleish from Google Drive..."
     mkdir cf
-    mv ${IMG_DIR}/cvd-host_package.tar.gz cf/
-    mv ${IMG_DIR}/aosp_cf_x86_64_phone-img-xxxxxx.zip cf/
+    # Install gdown if not already installed
+    pip install gdown --quiet
+    # Replace with the actual file IDs
+    FILE_ID_1=https://drive.google.com/file/d/1va_j0k4NaklRoQtdfhnqYGuOa-SY9f7-/view?usp=drive_link
+    FILE_ID_2=https://drive.google.com/file/d/1HCH7EAFcwtQ3qtYuwnvC0DemtSbBLoJb/view?usp=drive_link
+    gdown https://drive.google.com/uc?id=${FILE_ID_1} -O cf/cvd-host_package.tar.gz
+    gdown https://drive.google.com/uc?id=${FILE_ID_2} -O cf/aosp_cf_x86_64_phone-img-10586990.zip
     tar xvf cf/cvd-host_package.tar.gz -C cf/
-    unzip cf/aosp_cf_x86_64_phone-img-xxxxxx.zip -d cf/
+    unzip cf/aosp_cf_x86_64_phone-img-10586990 -d cf/
     touch ${FLAG_DIR}/step3_complete
 fi
 
