@@ -1,1 +1,5 @@
-# android-cuttlefish-automation
+# Android Cuttlefish Virtual Device Creation Automation
+
+```
+source ./create-android-cuttlefish.sh
+```
