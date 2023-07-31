@@ -48,14 +48,17 @@ if [ ! -f "${FLAG_DIR}/step3_complete" ]; then
     # Install gdown if not already installed
     pip install gdown --quiet
     # Replace with the actual file IDs
-    FILE_ID_1=https://drive.google.com/file/d/1va_j0k4NaklRoQtdfhnqYGuOa-SY9f7-/view?usp=drive_link
-    FILE_ID_2=https://drive.google.com/file/d/1HCH7EAFcwtQ3qtYuwnvC0DemtSbBLoJb/view?usp=drive_link
-    gdown https://drive.google.com/uc?id=${FILE_ID_1} -O cf/cvd-host_package.tar.gz
-    gdown https://drive.google.com/uc?id=${FILE_ID_2} -O cf/aosp_cf_x86_64_phone-img-10586990.zip
+    FILE_ID_1 = 1va_j0k4NaklRoQtdfhnqYGuOa-SY9f7-
+    FILE_ID_2 = 1HCH7EAFcwtQ3qtYuwnvC0DemtSbBLoJb
+    gdown --id ${FILE_ID_1} -O cf/cvd-host_package.tar.gz
+    gdown --id ${FILE_ID_2} -O cf/aosp_cf_x86_64_phone-img-10586990.zip
     tar xvf cf/cvd-host_package.tar.gz -C cf/
     unzip cf/aosp_cf_x86_64_phone-img-10586990 -d cf/
     touch ${FLAG_DIR}/step3_complete
 fi
+
+# Step 3.5: clean the flag files
+rm -rf ${FLAG_DIR}
 
 # Step 4: Launch cuttlefish
 echo "Step 4: Launching cuttlefish..."
