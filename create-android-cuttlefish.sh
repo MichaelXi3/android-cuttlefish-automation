@@ -48,8 +48,8 @@ if [ ! -f "${FLAG_DIR}/step3_complete" ]; then
     # Install gdown if not already installed
     pip install gdown --quiet
     # Replace with the actual file IDs
-    FILE_ID_1 = 1va_j0k4NaklRoQtdfhnqYGuOa-SY9f7-
-    FILE_ID_2 = 1HCH7EAFcwtQ3qtYuwnvC0DemtSbBLoJb
+    FILE_ID_1=1va_j0k4NaklRoQtdfhnqYGuOa-SY9f7-
+    FILE_ID_2=1HCH7EAFcwtQ3qtYuwnvC0DemtSbBLoJb
     gdown --id ${FILE_ID_1} -O cf/cvd-host_package.tar.gz
     gdown --id ${FILE_ID_2} -O cf/aosp_cf_x86_64_phone-img-10586990.zip
     tar xvf cf/cvd-host_package.tar.gz -C cf/
