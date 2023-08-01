@@ -66,6 +66,6 @@ rm -rf ${FLAG_DIR}
 echo "Step 4: Launching cuttlefish..."
 cd cf
 HOME=$PWD ./bin/launch_cvd --daemon
-sleep 5
+sleep 15
 ./bin/adb root
 ./bin/adb shell
